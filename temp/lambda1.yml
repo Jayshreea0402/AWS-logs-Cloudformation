@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: arn:aws:iam::252007810724:role/cloudformation-pmg
+      Code:
+        S3Bucket: motadata-function-code-lambda
+        S3Key: lambda_function.zip
+      Runtime: python3.11
+
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: motadata-destination-s3-bucket
+
+  # MyKinesisStream:
+  #   Type: AWS::Kinesis::Stream
+  #   Properties:
+  #     Name: my-kinesis-stream
+  #     ShardCount: 1

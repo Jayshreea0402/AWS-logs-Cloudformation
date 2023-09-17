@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create an AWS CloudTrail trail to send logs to CloudWatch Logs.
+
+# Parameters:
+#   CloudTrailName:
+#     Type: String
+#     Description: Name for the CloudTrail trail.
+#     Default: jayshreeeee
+
+Resources:
+  CloudTrail:
+    Type: AWS::CloudTrail::Trail
+    Properties:
+      IsLogging: true
+      IsMultiRegionTrail: true
+      IncludeGlobalServiceEvents: true
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:*
+      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRolesforCloudwatchLogs #arn:aws:iam::252007810724:role/aws-service-role/cloudtrail.amazonaws.com/AWSServiceRoleForCloudTrail
+      S3BucketName: jayshreeeeeeeeeeeeeeeeeeeeeeee
+      S3KeyPrefix: CloudTrail/
+      TrailName: CloudTrailName-pmg
+
+  # CloudWatchLogsLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Default
+
+#   CloudTrailCloudWatchLogsRole:
+#     Type: AWS::IAM::Role
+#     Properties:
+#       RoleName: CloudTrailCloudWatchLogsRole
+#       AssumeRolePolicyDocument:
+#         Version: '2012-10-17'
+#         Statement:
+#           - Effect: Allow
+#             Principal:
+#               Service: cloudtrail.amazonaws.com
+#             Action: sts:AssumeRole
+#       Policies:
+#         - PolicyName: CloudWatchLogsPolicy
+#           PolicyDocument:
+#             Version: '2012-10-17'
+#             Statement:
+#               - Effect: Allow
+#                 Action:
+#                   - logs:CreateLogStream
+#                   - logs:PutLogEvents
+#                 Resource: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:*
+
+#   CloudTrailS3Bucket:
+#     Type: AWS::S3::Bucket
+#     Properties:
+#       BucketName: apkabucketnamepmg
+
+# # Outputs:
+# #   CloudTrailNameOutput:
+# #     Description: Name of the created CloudTrail trail.
+# #     Value: !Ref CloudTrailName
+
+# #   CloudTrailLogGroupNameOutput:
+# #     #Description: Log group name for CloudTrail logs in CloudWatch Logs.
+# #     Value: !GetAtt CloudWatchLogsLogGroup.LogGroupName

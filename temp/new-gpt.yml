@@ -1,0 +1,27 @@
+Resources:
+  MyCloudTrail:
+    Type: AWS::CloudTrail::Trail
+    Properties:
+      IsLogging: true
+      S3BucketName: my-cloudtrail-bucket
+
+  MyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: my-resource-logs
+
+  MyKinesisFirehoseDeliveryStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamType: DirectPut
+      S3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::my-delivery-bucket
+        Prefix: cloudwatch-cloudtrail-logs/
+        RoleARN: arn:aws:iam::123456789012:role/firehose-s3-role
+
+  MySubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      LogGroupName: my-resource-logs
+      FilterPattern: ""
+      DestinationArn: !GetAtt MyKinesisFirehoseDeliveryStream.Arn

@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  TrailName:
+    Type: String
+    Default: cloudformation-trail
+  S3BucketName:
+    Type: String
+    Default: new-pmg-3
+  S3BucketPolicyName:
+    Type: String
+    Default: CloudTrailS3BucketPolicy
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref S3BucketName
+  
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: S3Bucket
+    Properties:
+      Bucket: !Ref S3BucketName
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AWSCloudTrailAclCheck
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: !Sub "arn:aws:s3:::${S3BucketName}"
+
+          - Sid: AWSCloudTrailWrite
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub "arn:aws:s3:::${S3BucketName}/cloudtrail-logs/*"
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: bucket-owner-full-control
+
+  CloudTrail:
+    Type: AWS::CloudTrail::Trail
+    DependsOn:  S3Bucket
+    Properties:
+      S3BucketName: !Ref S3BucketName
+      S3KeyPrefix: cloudtrail-logs/
+      IsLogging: true
+      IsMultiRegionTrail: true
+      IncludeGlobalServiceEvents: true
+      EnableLogFileValidation: true
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs #arn:aws:iam::252007810724:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
+      KMSKeyId: arn:aws:kms:ap-south-1:696130670351:key/mrk-a40ce9a655a94e40acab7db567d2e278
+
+
+  
+
+# Outputs:
+#   CloudTrailArn:
+#     Description: CloudTrail ARN
+#     Value: !GetAtt CloudTrail.Arn
+
+
+# Parameters:   #to be send to parameters file
+#   TrailName:
+#     Type: String
+#     Default: cloudformation-trail
+#   BucketName:
+#     Type: String
+#     Default: cloudtrail-storage #for testing
+#   CloudWatchLogsLogGroupName:
+#     Type: String
+#     Default: pmg-cloudformation-loggroup
+#   CloudWatchLogsRoleName:
+#     Type: String
+#     Default: CloudTrailRoleForCloudWatchLogs_pmg
+
+# Resources:
+#   # S3Bucket:
+#   #   Type: 'AWS::S3::Bucket'
+#   #   Properties:
+#   #     BucketName: !Ref BucketName
+#   CloudTrail:
+#     Type: AWS::CloudTrail::Trail
+#     Properties:
+#       S3BucketName: !Ref BucketName
+#       S3KeyPrefix: "motadata"
+#       IsLogging: true
+#       TrailName: !Ref TrailName
+#       #EnableLogFileValidation: true
+#       IncludeGlobalServiceEvents: true
+#       IsMultiRegionTrail: true
+#       #To be changed 
+#       CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+#       CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
+#       KMSKeyId: arn:aws:kms:ap-south-1:696130670351:key/mrk-a40ce9a655a94e40acab7db567d2e278
+#       EventSelectors:
+#         # - DataResources:
+#         #     - Type: AWS::S3::Object
+#         #       Values:
+#         #         - !Sub "arn:${AWS::Partition}:s3"
+#         - IncludeManagementEvents: true
+#           ReadWriteType: All

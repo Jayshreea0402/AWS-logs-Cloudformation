@@ -1,0 +1,81 @@
+Parameters:   
+  LogGroupName:
+      Type: String
+      Description: log group name for cloudwatch
+      Default: MotadataLogGroup
+  S3BucketName:
+      Type: String
+      Default: motadatatraillog-jayshree
+  CloudWatchLogsRoleName:
+      Type: String
+      Default: CloudTrailRoleForCloudWatchLogs_pmg
+  CloudTrailName:
+      Type: String
+      Default: motadataTrail
+Resources:
+  CloudwatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref LogGroupName
+      CloudWatchLogsLogGroupArn: MotadataLogGroup.Arn
+      RetentionInDays: 30
+  StorageForCloudTrail:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+  CloudTrail:
+    Type: AWS::CloudTrail::Trail
+    Properties:
+      S3BucketName: !Ref S3BucketName
+      S3KeyPrefix: "motadata"
+      IsLogging: true
+      TrailName: !Ref CloudTrailName
+      EnableLogFileValidation: true
+      IncludeGlobalServiceEvents: true
+      IsMultiRegionTrail: true
+      CloudWatchLogsLogGroupName: !Ref LogGroupName
+      CloudWatchLogsRoleName: !Ref CloudWatchLogsRoleName
+        #Fn::ImportValue: "TrailLogGroupRoleTestArn"
+      KMSKey: jayshree
+      # Tags:
+      #   - Key: "TagKeyIntTest"
+      #     Value: "TagValueIntTest"
+      #   - Key: "TagKeyIntTest2"
+      #     Value: "TagValueIntTest2"
+      # SnsTopicName:
+      #   Fn::ImportValue: TrailTopicTest
+      EventSelectors:
+        - DataResources:
+            - Type: AWS::S3::Object
+              Values:
+                - !Sub "arn:${AWS::Partition}:s3"
+          IncludeManagementEvents: true
+          ReadWriteType: All
+  # CloudTrail:
+  #   Type: AWS::CloudTrail::Trail
+  #   Properties:
+  #     S3BucketName: !Ref StorageForCloudTrailmotadatas399888
+  #     #S3KeyPrefix: "motadata"
+  #     IsLogging: true
+  #     TrailName: !Ref TrailName
+  #     EnableLogFileValidation: true
+  #     IncludeGlobalServiceEvents: true
+  #     IsMultiRegionTrail: true
+  #     CloudWatchLogsLogGroupName: !Ref LogGroupName
+  #       #Fn::ImportValue: "TrailLogGroupTestArn"
+  #     CloudWatchLogsRoleName: !Ref CloudWatchRole
+  #     KMSKeyId:
+  #       Fn::ImportValue: pmg
+  #     EventSelectors:
+  #       # - DataResources:
+  #       #     - Type: AWS::S3::Object
+  #       #       Values:
+  #       #         - !Sub "arn:${AWS::Partition}:s3"
+  #         IncludeManagementEvents: true
+  #         ReadWriteType: All
+
+# Resources:
+#   motadatatraillogss3:
+#     Type: AWS::S3::Bucket
+#     Properties:
+#       BucketName: motadatatraillogss3

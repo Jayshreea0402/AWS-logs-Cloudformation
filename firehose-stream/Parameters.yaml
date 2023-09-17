@@ -1,0 +1,16 @@
+Parameters:   #to be send to parameters file
+  TrailName:
+    Type: String
+    Default: Motadata-trail
+  BucketName:
+    Type: String
+    Default: Motadata-cloudtrail-store #for testing
+  CloudWatchLogsLogGroupName:
+    Type: String
+    Default: MotadataStream
+  CloudWatchLogsRoleName:
+    Type: String
+    Default: CloudTrailRoleForCloudWatchLogs
+  DeliveryStreamName:
+    Type: String
+    Default: MotadataDeliveryStream

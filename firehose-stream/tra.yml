@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create CloudTrail Trail with CloudWatch Logs
+Parameters:
+  TrailName:
+    Type: String
+    Default: MyCloudTrail
+  LogGroupName:
+    Type: String
+    Default: pmg-cloudformation-loggroup
+  S3BucketName:
+    Type: String
+    Default: cf-code-pmg-1
+
+Resources:
+  CloudTrail:
+    Type: 'AWS::CloudTrail::Trail'
+    Properties:
+      TrailName: !Ref TrailName
+      S3BucketName: !Ref S3BucketName
+      IsLogging: true
+      EventSelectors:
+      - DataResources:
+        - Type: AWS::S3::Object
+          Values:
+            - !Sub "arn:aws:s3:::-frontend.zip"
+            - !Sub "arn:aws:s3:::-infrastructure.zip"
+        ReadWriteType: All
+        IncludeManagementEvents: false

@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to collect CloudWatch Logs and send to S3 via Firehose
+
+Parameters:   
+  LogGroupName:
+      Type: String
+      Description: log group name for cloudwatch
+      Default: MyCloudTrailLogs-pmg
+  DeliveryStreamName:
+      Type: String
+      Description: Name of the Kinesis Firehose Delivery Stream
+      Default: 252007810724_CloudTrail_ap-south-1_2
+  S3BucketName:
+      Type: String
+      Description: Name of the storage already created
+      Default: pmg-firehose
+      
+Resources:
+    FirehoseDeliveryStream:
+      Type: 'AWS::KinesisFirehose::DeliveryStream'
+      Properties:
+        LogStreamName: !Ref DeliveryStreamName
+        DeliveryStreamType: DirectPut
+        S3DestinationConfiguration:
+          BucketARN: arn:aws:s3:::pmg-firehose
+          BufferingHints:
+            SizeInMBs: 128
+            IntervalInSeconds: 300
+          RoleARN: arn:aws:iam::252007810724:role/pmg-4-stream
+          Prefix: CloudWatchLogs/
+          CompressionFormat: UNCOMPRESSED
+          CloudWatchLoggingOptions:
+            Enabled: true
+            LogGroupName: !Ref LogGroupName
+            #LogStreamName: FirehoseLogStream
+
+    # FirehoseRole:
+    #   Type: 'AWS::IAM::Role'
+    #   Properties:
+    #     AssumeRolePolicyDocument:
+    #       Version: '2012-10-17'
+    #       Statement:
+    #         - Effect: Allow
+    #           Principal:
+    #             Service: firehose.amazonaws.com
+    #           Action: 'sts:AssumeRole'
+    #     Policies:
+    #       - PolicyName: FirehosePolicy
+    #         PolicyDocument:
+    #           Version: '2012-10-17'
+    #           Statement:
+    #             - Effect: Allow
+    #               Action:
+    #                 - 's3:PutObject'
+    #               Resource: !Sub 'arn:aws:s3:::${FirehoseS3Bucket}/*'
+
+  # FirehoseS3Bucket:
+  #   Type: 'AWS::S3::Bucket'
+  #   Properties:
+  #     BucketName: my-firehose-s3-bucket
+
+  # CloudWatchLogsGroup:
+  #   Type: 'AWS::Logs::LogGroup'
+  #   Properties:
+  #     LogGroupName: MyLogGroup

@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: "2010-09-09" 
+Parameters:
+  StorageName:
+    Type: String
+    Default: motadata-cloudtrail-store
+  FirehoseStore:
+    Type: String
+    Default: motadatadestinationbucket
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref StorageName  #TOBE CHANGED
+
+  FirehoseBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref FirehoseStore
+
+Outputs:
+  S3BucketARN:
+    Value: !GetAtt S3Bucket.Arn
+    Export:
+      Name: S3ForTrailStack2-Storage
+  FirehoseBucketARN:
+    Value: !GetAtt FirehoseBucket.Arn
+    Export:
+      Name: S3ForTrailStack2-destinationstore

@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  FirehoseStore:
+    Type: String
+    Default: motadatadestination-002
+  DeliveryStreamName:
+    Type: String
+    Default: logs-stream
+  CloudWatchLogsLogGroupName:
+      Type: String
+      Default: pmg-cloudformation-loggroup
+Resources:
+  FirehoseBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref FirehoseStore
+
+  MyFirehoseDeliveryStream:
+    Type: 'AWS::KinesisFirehose::DeliveryStream'
+    DependsOn: FirehoseBucket
+    Properties:
+      DeliveryStreamName: !Ref DeliveryStreamName
+      DeliveryStreamType: DirectPut
+      S3DestinationConfiguration:
+        BucketARN: !GetAtt FirehoseBucket.Arn #arn:aws:s3:::code-pmg #
+        RoleARN: arn:aws:iam::252007810724:role/service-role/KinesisFirehoseServiceRole-PUT-S3-motad-ap-south-1-1690868104288
+        Prefix: raw-logs/
+        ErrorOutputPrefix: firehose-errors/
+        CompressionFormat: UNCOMPRESSED
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref CloudWatchLogsLogGroupName
+          LogStreamName: !Ref CloudWatchLogsLogGroupName
+Outputs:
+  FirehoseDeliveryStreamName:
+    Value: !Ref MyFirehoseDeliveryStream
+    Export:
+      Name: FirehoseStack5-DeliveryStream
+  FirehoseDeliveryStreamARN:
+    Value: !GetAtt MyFirehoseDeliveryStream.Arn
+    Export:
+      Name: FirehoseStack5-DeliveryStream-Arn

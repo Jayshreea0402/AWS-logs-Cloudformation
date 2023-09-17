@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: <your stack description here>
+
+#Strating here log group creation 
+Resources:
+  CloudwatchStack1:    
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./LogGroup.yaml
+      TimeoutInMinutes: 5
+
+#S3 for cloudtrail
+  S3ForTrailStack2:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./s3.yml
+      TimeoutInMinutes: 5
+      #DeletionPolicy: Delete
+
+#IAM role and policy 
+  IamRolehStack3:    
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./IAM.yml
+      TimeoutInMinutes: 5
+#Trail creation
+  CloudTrailStack4:    
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./cloudTrail.yaml
+      TimeoutInMinutes: 5
+
+#Firehose creation
+  FirehoseStack5:    
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: firehose-stream.yaml
+      TimeoutInMinutes: 10
+
+
+

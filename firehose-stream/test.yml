@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create an S3 bucket for AWS CloudTrail and apply the required permissions.
+
+Parameters:
+  CloudTrailBucketName:
+    Type: String
+    Description: Name of the S3 bucket for CloudTrail logs.
+    Default: jayshreeeeeeeeeeeeeeeeeeeeeeee
+#use this as cloudtrail part1
+Resources:
+  CloudTrailS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref CloudTrailBucketName
+      AccessControl: BucketOwnerFullControl
+
+  CloudTrailS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CloudTrailS3Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AWSCloudTrailAclCheck
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: !Sub arn:aws:s3:::${CloudTrailS3Bucket}
+          - Sid: AWSCloudTrailWrite
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub arn:aws:s3:::${CloudTrailS3Bucket}/*
+
+# Outputs:
+#   CloudTrailBucketNameOutput:
+#     Description: Name of the created S3 bucket for CloudTrail.
+#     Value: !Ref CloudTrailBucketName

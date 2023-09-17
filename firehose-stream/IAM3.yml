@@ -1,0 +1,38 @@
+#IAM role for firehose
+AWSTemplateFormatVersion: "2010-09-09"  #Creating role for cloudtrailS3 
+Parameters:
+  TrailName:
+    Type: String
+    Default: cloudformation-trail #To be added in parameter file
+  DeliveryStreamName:
+    Type: String
+    Default: CloudformationStream
+  FirehoseRole:
+    Type: 'AWS::IAM::Role'
+    DeletionPolicy: Delete
+    Properties:
+      #RoleName: motadatafirehoseRole #!Sub firehoseRole-${DeliveryStreamName}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - Firehose.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: FirehoseCloudWatchS3Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                  - 's3:PutObject'
+                Resource: 
+                  - !ImportValue CloudwatchStack1-LogGroupARN  #ARN OF CLOUDWATCH LOG GROUP
+                  - !ImportValue S3ForTrailStack2-destinationstore #ARN OF S3 #parameterTOBECHANGED*
+

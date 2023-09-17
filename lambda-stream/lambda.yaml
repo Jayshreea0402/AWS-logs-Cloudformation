@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  motadatalogscloudformationdestination:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: motadata-logs-cloudformation-destination
+
+  MotadataLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: MotadataLambdaFunction
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.11
+      Role: arn:aws:iam::252007810724:role/cloudformation-pmg
+      Code:
+        S3Bucket: motadata-function-code-lambda
+        S3Key: lambda_function.zip
+
+# Outputs:
+#   MotadataLambdaFunctionpmgArn:
+#     Description: ARN of the Lambda function to collect CloudWatch logs and send them to S3
+#     Value: Fn::GetAtt MotadataLambdaFunction-pmg.Arn
+      

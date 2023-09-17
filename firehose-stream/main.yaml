@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+#Strating here log group creation 
+Resources:
+  CloudwatchStack1:    
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://code-pmg.s3.ap-south-1.amazonaws.com/LogGroup.yaml
+      #TemplateURL: C:\Users\Jayshree Acharya\Downloads\motadata-aws\firehose-stream
+      #DeletionPolicy: Delete
+      TimeoutInMinutes: 5
+
+#S3 for cloudtrail
+  S3ForTrailStack2:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: 
+      - CloudwatchStack1
+      #- CloudwatchLogGroup
+    Properties:
+      TemplateURL: https://code-pmg.s3.ap-south-1.amazonaws.com/s3.yml
+      TimeoutInMinutes: 10
+      #DeletionPolicy: Delete
+
+#IAM role and policy 
+  # IamRolehStack3:    
+  #   Type: AWS::CloudFormation::Stack
+  #   DependsOn: 
+  #     - S3ForTrailStack2
+  #   Properties:
+  #     TemplateURL:  https://code-pmg.s3.ap-south-1.amazonaws.com/IAM.yml
+  #     #- https://code-pmg.s3.ap-south-1.amazonaws.com/IAM.yml
+  #     #- https://code-pmg.s3.ap-south-1.amazonaws.com/IAM2.yml
+  #     # - https://code-pmg.s3.ap-south-1.amazonaws.com/IAM3.yml
+  #     TimeoutInMinutes: 10
+#Trail creation
+  # CloudTrailStack4:    
+  #   Type: AWS::CloudFormation::Stack
+  #   DependsOn: CloudwatchStack1
+  #   Properties:
+  #     TemplateURL: https://code-pmg.s3.ap-south-1.amazonaws.com/cloudtrail.yaml
+  #     TimeoutInMinutes: 10
+
+#Firehose creation
+  FirehoseStack5:    
+    Type: AWS::CloudFormation::Stack
+    DependsOn: S3ForTrailStack2
+    Properties:
+      TemplateURL: https://code-pmg.s3.ap-south-1.amazonaws.com/firehose-stream.yaml
+      TimeoutInMinutes: 10
+
+#Subscription Filter
+  SubscriptionStack6:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: FirehoseStack5
+    Properties:
+      TemplateURL: https://code-pmg.s3.ap-south-1.amazonaws.com/subscription-filter.yml
+      TimeoutInMinutes: 10
+
+

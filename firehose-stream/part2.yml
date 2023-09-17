@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create a CloudTrail trail and send logs to a CloudWatch Logs log group.
+# Parameters:
+#   CloudTrailBucket:
+#     Type: String
+#     Default: new-new-new-new-new
+    
+Resources:
+  CloudTrail:
+    Type: AWS::CloudTrail::Trail
+    DependsOn: 
+      - CloudWatchLogsPolicy
+      - CloudTrailRole
+      - CloudTrailBucket
+    Properties:
+      TrailName: MyCloudTrail      IsLogging: true
+      S3BucketName: yourbucketname
+      IsMultiRegionTrail: true
+      IncludeGlobalServiceEvents: true
+      EnableLogFileValidation: true
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs

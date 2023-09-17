@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  CloudWatchLogsLogGroupName:
+      Type: String
+      Default: pmg-cloudformation-loggroup
+Resources:   
+  CloudwatchLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: !Ref CloudWatchLogsLogGroupName
+Outputs:
+  CloudWatchLogGroupARN:
+    Value: !GetAtt CloudwatchLogGroup.Arn
+    Export: 
+      Name: CloudwatchStack1-LogGroupARN
+    

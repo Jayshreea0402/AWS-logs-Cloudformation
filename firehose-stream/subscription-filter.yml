@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create a Subscription Filter to Send Logs to Kinesis Firehose
+Parameters:
+  LogGroupName:
+    Type: String
+    Default: pmg-cloudformation-loggroup
+#     Description: The name of the CloudWatch Log Group.
+#   KinesisFirehoseStream:
+#     Type: String
+#     Description: The ARN of the Kinesis Firehose delivery stream.
+
+Resources:
+  SubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      LogGroupName: !Ref LogGroupName
+      FilterPattern: "" 
+      #DestinationArn: arn:aws:logs:ap-south-1:252007810724:log-group:jayshree:* #!ImportValue FirehoseStack5-DeliveryStream
+      RoleArn: arn:aws:iam::252007810724:role/assume-pmg-role #arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs
+      FilterName: "motadata"
+      DestinationArn: !ImportValue FirehoseStack5-DeliveryStream-Arn #FirehoseStack5-DeliveryStream
+
+
+Outputs:
+  SubscriptionFilterArn:
+    Description: The ARN of the CloudWatch Logs subscription filter.
+    Value: !Ref SubscriptionFilter

@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: "2010-09-09"  #Creating role for cloudtrailS3 
+Parameters:
+  TrailName:
+    Type: String
+    Default: cloudformation-trail #To be added in parameter file
+  DeliveryStreamName:
+    Type: String
+    Default: CloudformationStream
+
+#role for cloudtrail and s3
+Resources:
+  # CloudTrails3Role:
+  #   Type: 'AWS::IAM::Role'
+  #   # DeletionPolicy: Delete
+  #   Properties:
+  #     #RoleName: motadataCloudTrailRole
+  #     AssumeRolePolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - cloudtrail.amazonaws.com
+  #           Action:
+  #             - 'sts:AssumeRole'
+  #     Path: /
+  #     Policies:
+  #       - PolicyName: CloudFormationCloudTrailS3Policy
+  #         PolicyDocument:
+  #           Version: "2012-10-17"
+  #           Statement:
+  #             - Effect: Allow
+  #               Action: 
+  #               - 's3:PutObject'
+  #               - 's3:GetObject'
+  #               Resource: 
+  #                 S3Storage: !ImportValue S3ForTrailStack2-Storage  #parameterTOBECHANGED* 'arn:aws:s3:::cf-code-pmg'
+
+# #role for cloudwatch and cloudtrail
+  # CloudwatchTrailRole:
+  #   Type: 'AWS::IAM::Role'
+  #   DeletionPolicy: Delete
+  #   Properties:
+  #     RoleName: CloudTrailRoleForCloudWatchLogs #!Sub CloudTrailRoleForCloudWatchLogs-${TrailName}
+  #     AssumeRolePolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - cloudwatch.amazonaws.com
+  #           Action:
+  #             - 'sts:AssumeRole'
+#       Path: /
+#       Policies:
+#         - PolicyName: Cloudwatch-CloudTrail-Policy
+#           PolicyDocument:
+#             Version: "2012-10-17"
+#             Statement:
+#               - Effect: Allow
+#                 Action: 
+#                   - 'logs:CreateLogGroup'
+#                   - 'logs:CreateLogStream'
+#                   - 'logs:PutLogEvents'
+#                 Resource: 
+#                   - !ImportValue CloudwatchStack1-LogGroupARN #parameterTOBECHANGED* 'arn:aws:s3:::cf-code-pmg'  cloudtrail arn
+# Outputs:
+#   CloudTrailRoleARN:
+#     Value: CloudTrailRoleForCloudWatchLogs.Arn
+#     Export: 
+#       Name: IamRolehStack3-CloudTrailRoleARN
+  
+# #IAM role for firehose
+  FirehoseRole:
+    Type: 'AWS::IAM::Role'
+    DeletionPolicy: Delete
+    Properties:
+      #RoleName: motadatafirehoseRole #!Sub firehoseRole-${DeliveryStreamName}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - Firehose.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: FirehoseCloudWatchS3Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                  - 's3:PutObject'
+                Resource: 
+                  - !ImportValue CloudwatchStack1-LogGroupARN  #ARN OF CLOUDWATCH LOG GROUP
+                  - !ImportValue S3ForTrailStack2-destinationstore #ARN OF S3 #parameterTOBECHANGED*
+
