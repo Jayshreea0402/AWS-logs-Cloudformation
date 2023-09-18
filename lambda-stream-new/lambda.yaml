@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MotadataLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: MotadataLambdaFunction
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.11
+      Role: !ImportValue RoleArn #arn:aws:iam::252007810724:role/cloudformation-pmg
+      Code:
+        S3Bucket: cloudformation-log-collection
+        S3Key: lambda_function.zip
+
+# Outputs:
+#   LogsDestinationARN:
+#     Value: !GetAtt motadatalogscloudformationdestination.Arn
+#     Export:
+#       Name: RoleArn
+      

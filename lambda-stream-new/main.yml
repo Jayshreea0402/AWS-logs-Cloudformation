@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+#Strating here log group creation 
+Resources:
+  S3Stack1:    
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cloudformation-log-collection.s3.ap-south-1.amazonaws.com/S3.yaml
+  RoleStack2:    
+    Type: AWS::CloudFormation::Stack
+    DependsOn: S3Stack1
+    Properties:
+      TemplateURL: https://cloudformation-log-collection.s3.ap-south-1.amazonaws.com/IAM.yaml
+  LambdaStack3:    
+    Type: AWS::CloudFormation::Stack
+    DependsOn: RoleStack2
+    Properties:
+      TemplateURL: https://cloudformation-log-collection.s3.ap-south-1.amazonaws.com/lambda.yaml
+  CloudwatchStack4:   
+    Type: AWS::CloudFormation::Stack
+    DependsOn: LambdaStack3
+    Properties:
+      TemplateURL: https://cloudformation-log-collection.s3.ap-south-1.amazonaws.com/Cloudwatch-trail.yaml
+  

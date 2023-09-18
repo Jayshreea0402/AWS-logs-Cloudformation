@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  CloudWatchLogsLogGroupName:
+      Type: String
+      Default: manualpmgoii #pmg-cloudformation-loggroup-jjayshree
+  TrailName:
+    Type: String
+    Default: pmgtrailoiii #cloudformation-trail-jayshree
+  TrailBucketName:
+    Type: String
+    Default: buck-pmg-oii #new-pmg-3-jayshree
+  # S3BucketPolicyName:
+  #   Type: String
+  #   Default: CloudTrailS3BucketPolicy
+
+Resources:
+  TrailBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref TrailBucketName
+  
+  CloudwatchLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: !Ref CloudWatchLogsLogGroupName
+  
+  # S3BucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   DependsOn: TrailBucket
+  #   Properties:
+  #     Bucket: !Ref TrailBucketName
+  #     PolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Sid: AWSCloudTrailAclCheck
+  #           Effect: Allow
+  #           Principal:
+  #             Service: cloudtrail.amazonaws.com
+  #           Action: s3:GetBucketAcl
+  #           Resource: !Sub "arn:aws:s3:::${TrailBucketName}"
+
+  #         - Sid: AWSCloudTrailWrite
+  #           Effect: Allow
+  #           Principal:
+  #             Service: cloudtrail.amazonaws.com
+  #           Action: s3:PutObject
+  #           Resource: !Sub "arn:aws:s3:::${TrailBucketName}/cloudtrail-logs/*"
+  #           Condition:
+  #             StringEquals:
+  #               s3:x-amz-acl: bucket-owner-full-control
+
+  CloudTrail:
+    Type: AWS::CloudTrail::Trail
+    DependsOn: 
+      - TrailBucket
+      - CloudwatchLogGroup
+    Properties:
+      S3BucketName: !Ref TrailBucketName
+      S3KeyPrefix: cloudtrail-logs/
+      IsLogging: true
+      IsMultiRegionTrail: true
+      IncludeGlobalServiceEvents: true
+      EnableLogFileValidation: true
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs #arn:aws:iam::252007810724:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
+      KMSKeyId: arn:aws:kms:ap-south-1:696130670351:key/mrk-a40ce9a655a94e40acab7db567d2e278
+

@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  motadatalogscloudformationdestination:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: motadata-logs-cloudformation-destination
+
+Outputs:
+  LogsDestinationARN:
+    Value: !GetAtt motadatalogscloudformationdestination.Arn
+    Export:
+      Name: DestinationArn
+      
