@@ -14,8 +14,8 @@ Resources:
       IsLogging: true
       IsMultiRegionTrail: true
       IncludeGlobalServiceEvents: true
-      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:*
-      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRolesforCloudwatchLogs #arn:aws:iam::252007810724:role/aws-service-role/cloudtrail.amazonaws.com/AWSServiceRoleForCloudTrail
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:${Subscrion-id}:log-group:pmg-cloudformation-loggroup:*
+      CloudWatchLogsRoleArn: arn:aws:iam::${Subscrion-id}:role/service-role/CloudTrailRolesforCloudwatchLogs #arn:aws:iam::${Subscrion-id}:role/aws-service-role/cloudtrail.amazonaws.com/AWSServiceRoleForCloudTrail
       S3BucketName: jayshreeeeeeeeeeeeeeeeeeeeeeee
       S3KeyPrefix: CloudTrail/
       TrailName: CloudTrailName-pmg
@@ -44,7 +44,7 @@ Resources:
 #                 Action:
 #                   - logs:CreateLogStream
 #                   - logs:PutLogEvents
-#                 Resource: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:*
+#                 Resource: arn:aws:logs:ap-south-1:${Subscrion-id}:log-group:pmg-cloudformation-loggroup:*
 
 #   CloudTrailS3Bucket:
 #     Type: AWS::S3::Bucket
