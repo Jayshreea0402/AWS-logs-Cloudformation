@@ -17,7 +17,7 @@ Resources:
       S3DestinationConfiguration:
         BucketARN: arn:aws:s3:::my-delivery-bucket
         Prefix: cloudwatch-cloudtrail-logs/
-        RoleARN: arn:aws:iam::123456789012:role/firehose-s3-role
+        RoleARN: arn:aws:iam::${subscription-id}:role/firehose-s3-role
 
   MySubscriptionFilter:
     Type: AWS::Logs::SubscriptionFilter
