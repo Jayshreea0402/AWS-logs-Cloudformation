@@ -18,5 +18,5 @@ Resources:
       IsMultiRegionTrail: true
       IncludeGlobalServiceEvents: true
       EnableLogFileValidation: true
-      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
-      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:${Subscrion-id}:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+      CloudWatchLogsRoleArn: arn:aws:iam::${Subscrion-id}:role/service-role/CloudTrailRoleforCloudwatchLogs
