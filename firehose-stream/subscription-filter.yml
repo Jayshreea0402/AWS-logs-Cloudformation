@@ -15,8 +15,8 @@ Resources:
     Properties:
       LogGroupName: !Ref LogGroupName
       FilterPattern: "" 
-      #DestinationArn: arn:aws:logs:ap-south-1:252007810724:log-group:jayshree:* #!ImportValue FirehoseStack5-DeliveryStream
-      RoleArn: arn:aws:iam::252007810724:role/assume-pmg-role #arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs
+      #DestinationArn: arn:aws:logs:ap-south-1:${Subscrion-id}:log-group:jayshree:* #!ImportValue FirehoseStack5-DeliveryStream
+      RoleArn: arn:aws:iam::${Subscrion-id}:role/assume-pmg-role #arn:aws:iam::${Subscrion-id}:role/service-role/CloudTrailRoleforCloudwatchLogs
       FilterName: "motadata"
       DestinationArn: !ImportValue FirehoseStack5-DeliveryStream-Arn #FirehoseStack5-DeliveryStream
 
