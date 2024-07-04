@@ -23,7 +23,7 @@ Resources:
       DeliveryStreamType: DirectPut
       S3DestinationConfiguration:
         BucketARN: !GetAtt FirehoseBucket.Arn #arn:aws:s3:::code-pmg #
-        RoleARN: arn:aws:iam::252007810724:role/service-role/KinesisFirehoseServiceRole-PUT-S3-motad-ap-south-1-1690868104288
+        RoleARN: arn:aws:iam::${Subscrion-id}:role/service-role/KinesisFirehoseServiceRole-PUT-S3-motad-ap-south-1-*
         Prefix: raw-logs/
         ErrorOutputPrefix: firehose-errors/
         CompressionFormat: UNCOMPRESSED
