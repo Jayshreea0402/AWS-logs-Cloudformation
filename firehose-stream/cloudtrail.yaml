@@ -52,9 +52,9 @@ Resources:
       IsMultiRegionTrail: true
       IncludeGlobalServiceEvents: true
       EnableLogFileValidation: true
-      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
-      CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/service-role/CloudTrailRoleforCloudwatchLogs #arn:aws:iam::252007810724:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
-      KMSKeyId: arn:aws:kms:ap-south-1:696130670351:key/mrk-a40ce9a655a94e40acab7db567d2e278
+      CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:${Subscrion-id}:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+      CloudWatchLogsRoleArn: arn:aws:iam::${Subscrion-id}:role/service-role/CloudTrailRoleforCloudwatchLogs #arn:aws:iam::${Subscrion-id}:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
+      KMSKeyId: arn:aws:kms:ap-south-1:${Subscrion-id}:key/mrk-**
 
 
   
@@ -95,9 +95,9 @@ Resources:
 #       IncludeGlobalServiceEvents: true
 #       IsMultiRegionTrail: true
 #       #To be changed 
-#       CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:252007810724:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
-#       CloudWatchLogsRoleArn: arn:aws:iam::252007810724:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
-#       KMSKeyId: arn:aws:kms:ap-south-1:696130670351:key/mrk-a40ce9a655a94e40acab7db567d2e278
+#       CloudWatchLogsLogGroupArn: arn:aws:logs:ap-south-1:${Subscrion-id}:log-group:pmg-cloudformation-loggroup:* #!ImportValue CloudwatchStack1-LogGroupARN
+#       CloudWatchLogsRoleArn: arn:aws:iam::${Subscrion-id}:role/pmg-4-stream #!ImportValue IamRolehStack3-CloudTrailRoleForCloudWatchLogs
+#       KMSKeyId: arn:aws:kms:ap-south-1:${Subscrion-id}:key/mrk-*
 #       EventSelectors:
 #         # - DataResources:
 #         #     - Type: AWS::S3::Object
