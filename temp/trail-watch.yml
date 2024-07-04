@@ -37,7 +37,7 @@ Resources:
       S3BucketName: my-cloudtrail-bucket-pmg
       S3KeyPrefix: CloudTrailLogs/
       EnableLogFileValidation: true
-      KMSKeyId: arn:aws:kms:ap-south-1:252007810724:key/69d028e7-b809-46d7-9a4f-fdd3700c66c8
+      KMSKeyId: arn:aws:kms:ap-south-1:${subscription_id:key/69d028e7-b809-46d7-9a4f-fdd3700c66c8
       IncludeGlobalServiceEvents: true
 
   CloudWatchLogsGroup:
