@@ -4,7 +4,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Handler: index.handler
-      Role: arn:aws:iam::252007810724:role/cloudformation-pmg
+      Role: arn:aws:iam::${Subscrion-id}:role/cloudformation-pmg
       Code:
         S3Bucket: motadata-function-code-lambda
         S3Key: lambda_function.zip
