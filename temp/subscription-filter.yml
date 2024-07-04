@@ -9,7 +9,7 @@ Parameters:
   DeliveryStreamName:
       Type: String
       Description: Name of the Kinesis Firehose Delivery Stream
-      Default: 252007810724_CloudTrail_ap-south-1_2
+      Default: ${subscription_id}_CloudTrail_ap-south-1_2
   S3BucketName:
       Type: String
       Description: Name of the storage already created
@@ -26,7 +26,7 @@ Resources:
           BufferingHints:
             SizeInMBs: 128
             IntervalInSeconds: 300
-          RoleARN: arn:aws:iam::252007810724:role/pmg-4-stream
+          RoleARN: arn:aws:iam::${subscription_id:role/pmg-4-stream
           Prefix: CloudWatchLogs/
           CompressionFormat: UNCOMPRESSED
           CloudWatchLoggingOptions:
